@@ -6,7 +6,7 @@ Cáo ống tre phiên bản Việt
 - Phù hợp cho người mới học, lâu năm, hoặc muốn tìm kiếm ngôn ngữ kịch bản mới mẻ
 
 ### Ví dụ mã nguồn
-```python
+```lua
 -- in lời chào
 print "Cáo ống tre phiên bản Việt"
 ```
