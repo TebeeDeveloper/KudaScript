@@ -1,0 +1,3 @@
+-- tạo biến chứa "Xin chào"
+create biến: "Xin chào"
+print biến

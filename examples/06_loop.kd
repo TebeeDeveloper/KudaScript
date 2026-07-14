@@ -1,0 +1,10 @@
+5 time do
+    print "Xin chào"
+end
+
+create a: 5
+
+until a != 0 do
+    print "a còn " a
+    a sub 1
+end

@@ -1,0 +1,16 @@
+create x: 5
+create y: 4
+
+if x > y then
+    print x " lớn hơn " y
+elseif x == y then
+    print x " bằng " y
+elseif x != y then
+    print x " khác " y
+elseif x <= y then
+    print x " nhỏ hơn bằng " y
+elseif x >= y then
+    print x " lớn hơn bằng " y
+else
+    print x " nhỏ hơn " y
+end
