@@ -8,7 +8,7 @@ SoB set Number 3
 -- Yêu cầu đối tượng SoA thực hiện phép tính với SoB
 SoA add SoB       -- 10 + 3 = 13
 SoA minus SoB     -- 10 - 3 = 7
-SoA multiply SoB  -- 10 / 3 = 30
+SoA multiply SoB  -- 10 * 3 = 30
 SoA divide SoB    -- 10 ÷ 3 ≈ 3.333
 
 -- Lưu kết quả vào đối tượng mới
