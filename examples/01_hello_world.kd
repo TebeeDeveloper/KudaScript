@@ -1,2 +1,9 @@
+-- file: 01_hello_world.kd
+
+-- ========================
+-- Chú thích chi tiết
+-- nhiều dòng ở đây
+-- ========================
+
 -- in ra một lời chào
-print "Xin chào"
+Screen print "Hello World"

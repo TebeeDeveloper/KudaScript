@@ -1,0 +1,36 @@
+-- file: 07_inherit.kd
+
+-- ========
+-- Định nghĩa đối tượng Nguoi và
+-- định nghĩa đối tượng HocSinh kế thừa đối tượng Nguoi
+-- và sử dụng đối tượng HocSinh
+-- ========
+
+define object Nguoi with
+
+    Ten set Text ""
+    Tuoi set Number 0
+
+    method chao with nothing do
+        Text "Xin chào, tôi tên là " Ten ", " Tuoi " tuổi.\n" send to Screen
+    end
+end
+
+define object HocSinh inherit Nguoi with
+
+    Lop set Text ""
+
+    method chao with nothing do
+        this do inherit chao
+
+        Text "Lớp hiện tại là " Lop ".\n" send to Screen
+    end
+end
+
+HocSinhAn set object HocSinh with
+    Ten set Text "An"
+    Tuoi set Number 10
+    Lop set Text "5A"
+end
+
+HocSinhAn do chao

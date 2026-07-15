@@ -1,7 +1,0 @@
-create x: 15
-create y: 4
-create z: 2
-
--- phép tính nối tiếp
-create ket_qua: x mul y add z div 2
--- tương đương: (15 * 4) + (2 / 2) = 61

@@ -1,0 +1,44 @@
+-- file: 05_loop.kd
+
+-- ================
+
+-- Lặp đúng n lần theo yêu cầu
+
+-- Lặp 5 lần
+Number 5 times do
+    Text "Chào bạn!\n" send to Screen
+end
+
+-- Lặp 10 lần với biến điếm
+Number 10 times with i do
+    Text "Lần thứ " send to Screen
+    i send to Screen
+    Text "\n" send to Screen
+end
+
+Tuoi set Number 0
+-- Lặp trong khi Tuoi nhỏ hơn 25
+Tuoi less 25 while do
+    Tuoi add Number 1
+    Tuoi send to Screen
+    Text "\n" send to Screen
+end
+
+-- Lặp cho đến khi đạt điều kiện
+So set Number -90
+
+So equal 0 until do
+    So add 1
+end
+
+-- ================
+
+-- Lặp qua danh sách
+
+DanhSach set List ["An", "Binh", "Cuong"]
+
+DanhSach each with ten do
+    Text "Xin chao " ten "\n" send to Screen
+end
+
+-- ================

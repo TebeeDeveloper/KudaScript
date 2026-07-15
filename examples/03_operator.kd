@@ -1,0 +1,19 @@
+-- file: 03_operator.kd
+-- Ví dụ phép tính giữa các đối tượng
+
+-- Tạo các đối tượng số
+SoA set Number 10
+SoB set Number 3
+
+-- Yêu cầu đối tượng SoA thực hiện phép tính với SoB
+SoA add SoB       -- 10 + 3 = 13
+SoA minus SoB     -- 10 - 3 = 7
+SoA multiply SoB  -- 10 / 3 = 30
+SoA divide SoB    -- 10 ÷ 3 ≈ 3.333
+
+-- Lưu kết quả vào đối tượng mới
+Tong set Number SoA add SoB
+Hieu set Number SoA minus SoB
+
+-- Gửi kết quả ra màn hình
+Text Tong "\n" Hieu send to Screen

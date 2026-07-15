@@ -1,0 +1,19 @@
+-- file: 06_object.kd
+-- Định nghĩa đối tượng Nguoi và sử dụng hành động chao
+
+define object Nguoi with
+
+    Ten set Text ""
+    Tuoi set Number 0
+
+    method chao with nothing do
+        Text "Xin chào, tôi tên là " Ten ", " Tuoi " tuổi.\n" send to Screen
+    end
+end
+
+An set object Nguoi with
+    Ten set Text "An"
+    Tuoi set Number 10
+end
+
+An do chao

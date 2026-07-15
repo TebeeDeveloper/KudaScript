@@ -1,3 +1,6 @@
+-- file: 02_var.kd
 -- tạo biến chứa "Xin chào"
-create biến: "Xin chào"
-print biến
+Bien set "Xin chào"
+
+-- in biến ra màn hình
+Text Bien "\n" send to Screen
