@@ -7,7 +7,7 @@ define object Nguoi with
     Tuoi set Number 0
 
     method chao with nothing do
-        Text "Xin chào, tôi tên là " Ten ", " Tuoi " tuổi.\n" send to Screen
+        Text "Xin chào, tôi tên là " Ten ", " Tuoi " tuổi." send to Screen do writeline
     end
 end
 

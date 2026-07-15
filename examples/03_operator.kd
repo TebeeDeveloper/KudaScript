@@ -16,4 +16,4 @@ Tong set Number SoA add SoB
 Hieu set Number SoA minus SoB
 
 -- Gửi kết quả ra màn hình
-Text Tong "\n" Hieu send to Screen
+Text Tong "\n" Hieu send to Screen do writeline

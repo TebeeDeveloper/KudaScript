@@ -3,4 +3,4 @@
 Bien set "Xin chào"
 
 -- in biến ra màn hình
-Text Bien "\n" send to Screen
+Text Bien "\n" send to Screen do writeline

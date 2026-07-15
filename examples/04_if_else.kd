@@ -3,26 +3,26 @@ Tuoi set Number 20
 
 -- Cách viết đầy đủ
 Tuoi greater 18 do
-    Text "Bạn đã đủ tuổi trưởng thành" send to Screen
+    Text "Bạn đã đủ tuổi trưởng thành" send to Screen do writeline
 end
 
 -- Cách viết gọn hơn
-Tuoi greater 18 do Text "Bạn đã đủ tuổi trưởng thành" send to Screen
+Tuoi greater 18 do Text "Bạn đã đủ tuổi trưởng thành" send to Screen do writeline
 
 Diem set 7.5
 
 Diem greater equal 5 do
-    Text "Chúc mừng bạn đã qua môn!\n" send to Screen
+    Text "Chúc mừng bạn đã qua môn!\n" send to Screen do writeline
 else
-    Text "Bạn cần cố gắng thêm nhé\n" send to Screen
+    Text "Bạn cần cố gắng thêm nhé\n" send to Screen do writeline
 end
 
 So set 0
 
 So greater 0 do
-    Text "Số dương" send to Screen
+    Text "Số dương" send to Screen do writeline
 else So less 0 do
-    Text "Số âm" send to Screen
+    Text "Số âm" send to Screen do writeline
 else
-    Text "Số không" send to Screen
+    Text "Số không" send to Screen do writeline
 end
