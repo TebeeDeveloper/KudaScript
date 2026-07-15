@@ -1,3 +1,5 @@
+<meta name="google-site-verification" content="Jo778AtF8tQk4N08Kk6FptKG7pGD6qEwnJpVKMwSESA" />
+
 # KudaScript
 Cáo ống tre phiên bản Việt
 
