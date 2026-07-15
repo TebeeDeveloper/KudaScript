@@ -6,4 +6,4 @@
 -- ========================
 
 -- in ra một lời chào
-Screen print "Hello World"
+Screen do writeline "Hello World"
