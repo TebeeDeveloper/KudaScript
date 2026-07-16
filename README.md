@@ -8,5 +8,5 @@ Cáo ống tre phiên bản Việt
 ### Ví dụ mã nguồn
 ```lua
 -- in lời chào
-print "Cáo ống tre phiên bản Việt"
+Screen do writeline by "Cáo ống tre phiên bản Việt"
 ```
