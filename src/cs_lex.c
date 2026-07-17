@@ -102,6 +102,7 @@ int lex(char* code, char* output, const char* filename) {
 
     const char* lib_headers =
         "#include <stdio.h>\n"
+        "#include <stdint.h>\n"
         "#include <stdlib.h>\n"
         "#include <string.h>\n"
         "#include <stdbool.h>\n"
