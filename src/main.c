@@ -45,13 +45,13 @@ char* breadfile(const char* file_name) {
 
 int main(int argc, char* argv[]) {
     if (argc >= 2 && (strcmp(argv[1], "--version") == 0 || strcmp(argv[1], "-v") == 0)) {
-        printf("CScript . ver 0x%03x.\n", CS_VERSION);
+        printf("KudaScript . ver 0x%03x.\n", CS_VERSION);
         printf("Combines speed/stability of C with simplicity of scripting\n");
         printf("Auto-detected compiler priority: gcc > clang > cl\n");
         return 0;
     }
     if (argc < 3) {
-        printf("How to use CScript: %s input.csr output [flags...]\n", argv[0]);
+        printf("How to use KudaScript: %s input.csr output [flags...]\n", argv[0]);
         printf("Example:\n");
         printf("  %s main.csr app\n", argv[0]);
         printf("  %s main.csr libm.so -shared\n", argv[0]);
