@@ -1,9 +1,0 @@
--- file: 01_hello_world.kd
-
--- ========================
--- Chú thích chi tiết
--- nhiều dòng ở đây
--- ========================
-
--- in ra một lời chào
-Screen do writeline "Hello World"
