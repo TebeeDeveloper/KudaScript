@@ -15,11 +15,11 @@ fn main() {
 -   Core language: Pure standard C.
 
 ## Intro
-KudaScript is once of milions programming-language latest, within the target:
--   Pure C, and strength as same as absolute of C.
+KudaScript is a new programming language built with clear goals:
+-   Full power and performance of pure C.
 -   Lightweight syntax, easy to read & learn like a scripting-language.
 -   Inherit all of ecosys of std C.
--   Compile to standalone execute file, non-dependend enviroment.
+-   Compile to standalone execute file, no external dependencies required.
 
 ## Standard Libs
 In the first version, you can use:
