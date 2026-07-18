@@ -83,7 +83,7 @@ kuda main.kuda main -cc=gcc -O2
 kuda main.kuda main -cc=clang -O2
 kuda main.kuda main.exe -cc=cl /O2
 ```
-$\color{red}Caution$: The -cc parameter must always be at position 4, right after kuda, source file, output file. If omitted compiler will be auto-detected.
+Caution: The -cc parameter must always be at position 4, right after kuda, source file, output file. If omitted compiler will be auto-detected.
 
 ## Examples of Program
 ### 1. Basic Output
@@ -184,7 +184,7 @@ This project released under the GNU GPL v3.0, all contributions are welcome!
 
 The only rule:
 
--    $\color{red}Must not reduce execution speed$ compared to the orriginal version.
+-    Must not reduce execution speed compared to the orriginal version.
 Upholding the spirit of "fast as C, simple as scripting."
 
 ## License
