@@ -181,8 +181,10 @@ fn main() {
 
 ## Contribute
 This project released under the GNU GPL v3.0, all contributions are welcome!
+
 The only rule:
-$\color{red}Must not reduce execution speed$ compared to the orriginal version.
+
+-    $\color{red}Must not reduce execution speed$ compared to the orriginal version.
 Upholding the spirit of "fast as C, simple as scripting."
 
 ## License
