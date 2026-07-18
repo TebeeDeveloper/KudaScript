@@ -51,19 +51,25 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     if (argc < 3) {
-        printf("How to use KudaScript: %s input.csr output [flags...]\n", argv[0]);
+        printf("How to use KudaScript: %s input.kuda output [flags...]\n", argv[0]);
         printf("Example:\n");
-        printf("  %s main.csr app\n", argv[0]);
-        printf("  %s main.csr libm.so -shared\n", argv[0]);
-        printf("  %s main.csr calc -lm -lpthread\n", argv[0]);
+        printf("  %s main.kuda app\n", argv[0]);
+        printf("  %s main.kuda libm.so -shared\n", argv[0]);
+        printf("  %s main.kuda calc -lm -lpthread\n", argv[0]);
         return 1;
     }
 
     const char* input_path = argv[1];
     const char* output_path = argv[2];
+    char* cc = NULL;
     char flags_buf[1024] = {0};
+    int i = 3;
     if (argc >= 4) {
-        for (int i = 3; i < argc; i++) {
+        if (strncmp(argv[3], "-cc=", 4) == 0) {
+            cc = argv[3] + 4;
+            i++;
+        }
+        for (; i < argc; i++) {
             strncat(flags_buf, argv[i], sizeof(flags_buf) - strlen(flags_buf) - 2);
             strncat(flags_buf, " ", sizeof(flags_buf) - strlen(flags_buf) - 1);
         }
