@@ -41,11 +41,9 @@ Need one of some compiler on your computer:
 ### Build from source (free! trust me bro)
 ```bash
 git clone https://github.com/TebeeDeveloper/KudaScript.git
-cd KudaScript
+cd KudaScript/src
 
-make
-
-gcc -o kuda src/*.c -std=c99
+go build -o kuda main.go
 ```
 If you use Windows, add `kuda` to enviroment variables PATH.
 
@@ -55,14 +53,13 @@ kuda --version
 ```
 The result must be:
 ```plaintext
-KudaScript . ver 0x100.
-Combines speed/stability of C with simplicity of scripting
-Auto-detected compiler priority: gcc > clang > cl
+KudaScript | Faster | Simplier | More Convenient
+KudaScript | 0x103  | 1.0.3
 ```
 
 ### Syntax Compiler
 ```bash
-kuda <source.kuda> <output_name> [compiler_flags]
+kuda [kdflag] <source.kuda> <output_name>
 ```
 
 ### Basic Examples
