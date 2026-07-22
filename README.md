@@ -80,7 +80,6 @@ kuda -cc=gcc -flags="-O2" main.kuda main
 kuda -cc=clang -flags="-O2" main.kuda main
 kuda -cc=cl -flags="/O2 "main.kuda main.exe
 ```
-Caution: The -cc parameter must always be at position 4, right after kuda, source file, output file. If omitted compiler will be auto-detected.
 
 ## Examples of Program
 ### 1. Basic Output
