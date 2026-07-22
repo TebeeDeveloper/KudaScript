@@ -74,109 +74,99 @@ kuda main.kuda main
 ### Compiler Flags
 All params write back of your output file.
 ```bash
-kuda main.kuda main -O3 -march=native
-kuda main.kuda main_debug -g -ggdb
-kuda main.kuda main -Wall -Wextra -Wpedantic
-kuda game.kuda game -lSDL2 -lpthread
+kuda -flags="-O3 -march=native" main.kuda main
+kuda -flags="-g -ggdb" main.kuda main_debug
+kuda -flags="-Wall Wextra -Wpedantic" main.kuda main
+kuda -flags="-lSDL2 -lpthread" game.kuda game
 
-kuda main.kuda main -cc=gcc -O2
-kuda main.kuda main -cc=clang -O2
-kuda main.kuda main.exe -cc=cl /O2
+kuda -cc=gcc -flags="-O2" main.kuda main
+kuda -cc=clang -flags="-O2" main.kuda main
+kuda -cc=cl -flags="/O2 "main.kuda main.exe
 ```
 Caution: The -cc parameter must always be at position 4, right after kuda, source file, output file. If omitted compiler will be auto-detected.
 
 ## Examples of Program
 ### 1. Basic Output
 ```c
-fn main() {
-    let name string = "KudaScript"
-    let version int = 0x100
+fn main() int
+    var name string = "KudaScript"
+    var version int = 0x100
 
     printf("=== %s ===\n", name)
     printf("Version: ver 0x%03X\n", version)
     printf("Speed of C, simplicity of scripting!\n")
-
-    return 0
-}
+end
 ```
 
 ### 2. Loop & Math
 ```c
-fn main() {
+fn main() int
     printf("Squares & square roots from 1 to 5:\n")
 
-    for (let i int = 0; i <= 5; i++) {
-        let square int = i * i
-        let root int = sqrt(i)
+    for i int = 0 5 2 do
+        var square int = i * i
+        var root int = sqrt(i)
         printf("%d → square: %d | root: %.2f\n", i, square, root)
-    }
-
+    end
     return 0
-}
+end
 ```
 
 ### 3. String Operations
 ```rs
-fn main() {
-    let text string = "KudaScript Open Source"
-    let keyword string = "Open Source"
+fn main() int
+    var text str = "KudaScript Open Source"
+    var keyword str = "Open Source"
 
     printf("Original text: %s\n", text)
     printf("Length: %u characters\n", strlen(text))
 
-    if (strstr(text, keyword) != NULL) {
+    if strstr(text, keyword) != NULL then
         printf("Found substring: '%s'\n", keyword)
-    } else {
+    else
         printf("Substring not found\n")
-    }
-
-    return 0
-}
+    end
+end
 ```
 
 ### 4. File I/O
 ```rs
-fn main() {
-    let path string = "test.txt"
+fn main() int
+    var path str = "test.txt"
 
-    let write_ptr FILE* = fopen(path, "w")
-    if write_ptr != NULL {
+    var write_ptr FILE* = fopen(path, "w")
+    if write_ptr != NULL then
         fputs("Hello from KudaScript!\n", write_ptr)
         fputs("Written via stdio.h directly\n", write_ptr)
         fclose(write_ptr)
         printf("Write successful!\n")
-    }
+    end
 
-    let read_ptr FILE* = fopen(path, "r")
-    if read_ptr != NULL {
+    var read_ptr FILE* = fopen(path, "r")
+    if read_ptr != NULL then
         printf("\nFile content:\n")
-        let line: char[256]
-        while fgets(line, 256, read_ptr) != NULL {
+        var line char[256]
+        while fgets(line, 256, read_ptr) != NULL do
             printf("%s", line)
-        }
+        end
         fclose(read_ptr)
-    }
-
-    return 0
-}
+    end
+end
 ```
 
 ### 5. Custom Function & Random
 ```rs
-fn random_range(min: int, max: int) int {
+fn random_range(min, max int) int
     return min + (rand() % (max - min + 1))
-}
+end
 
-fn main() {
+fn main() int
     srand(time(NULL))
-
     printf("5 random numbers (1–100):\n")
-    for (let i int = 0; i < 5; i++) {
+    for i int = 0 5 1 do
         printf("- %d\n", random_range(1, 100))
-    }
-
-    return 0
-}
+    end
+end
 ```
 
 ## Contribute
