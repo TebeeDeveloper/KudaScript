@@ -4,9 +4,9 @@
 
 ## Examples
 ```rust
-fn main() {
+fn main() int
     printf("Hello World\n")
-}
+end
 ```
 
 ## KudaScript - Combines the speed & stability of C with the simplicity of scripting
