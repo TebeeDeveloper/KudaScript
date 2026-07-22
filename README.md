@@ -10,7 +10,7 @@ end
 ```
 
 ## KudaScript - Combines the speed & stability of C with the simplicity of scripting
--   Current version: 0x100.
+-   Current version: 0x103.
 -   License: __GNU GPL v3__.
 -   Core language: Pure standard C.
 
