@@ -78,7 +78,7 @@ kuda -flags="-lSDL2 -lpthread" game.kuda game
 
 kuda -cc=gcc -flags="-O2" main.kuda main
 kuda -cc=clang -flags="-O2" main.kuda main
-kuda -cc=cl -flags="/O2 "main.kuda main.exe
+kuda -cc=cl -flags="/O2" main.kuda main.exe
 ```
 
 ## Examples of Program
