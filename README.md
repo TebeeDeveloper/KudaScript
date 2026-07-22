@@ -24,7 +24,7 @@ KudaScript is a new programming language built with clear goals:
 ## Standard Libs
 In the first version, you can use:
 -   stdio.h
--   stdin.h / stddef.h / stdbool.h
+-   stdint.h / stddef.h / stdbool.h
 -   stdlib.h
 -   string.h
 -   stdarg.h
