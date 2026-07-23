@@ -19,7 +19,7 @@ end
 -   Core language: Pure standard C.
 
 ## Why KudaScript
--    Only upgrade C, no garbage
+-    Only upgrade C, no bload
 -    Determinism syntax, no abstract
 -    Absolute secure your source
 -    Native C speed
