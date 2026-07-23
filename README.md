@@ -22,7 +22,9 @@ end
 -    Only upgrade C, no garbage
 -    Determinism syntax, no abstract
 -    Absolute secure your source
--    Fast as C
+-    Native C speed
+## Unlike Cython/Nuitka
+    no intermediate .c files written to disk — all translation happens in memory.
 
 ## Intro
 KudaScript is a new programming language built with clear goals:
