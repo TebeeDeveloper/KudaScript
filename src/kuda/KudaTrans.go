@@ -3,9 +3,10 @@ package kuda
 import (
 	"fmt"
 	"strings"
+	"unicode"
 )
 
-var kdMtype = map[string]string{
+var kdMtype map[string]string = map[string]string{
 	"str":   "char*",
 	"chr":   "char",
 	"int":   "int",
@@ -23,29 +24,37 @@ var kdMtype = map[string]string{
 	"void":  "void",
 	"bool":  "bool",
 
-	"[]str":  "char**",
-	"[]chr":  "char*",
-	"[]int":  "int*",
-	"[]i8":   "int8_t*",
-	"[]i16":  "int16_t*",
-	"[]i32":  "int32_t*",
-	"[]i64":  "int64_t*",
-	"[]uint": "unsigned int*",
-	"[]u8":   "uint8_t*",
-	"[]u16":  "uint16_t*",
-	"[]u32":  "uint32_t*",
-	"[]u64":  "uint64_t*",
-	"[]flt":  "float*",
-	"[]dbl":  "double*",
-	"[]void": "void*",
-	"[]bool": "bool*",
+	"[]str":  "char*[]",
+	"[]chr":  "char[]",
+	"[]int":  "int[]",
+	"[]i8":   "int8_t[]",
+	"[]i16":  "int16_t[]",
+	"[]i32":  "int32_t[]",
+	"[]i64":  "int64_t[]",
+	"[]uint": "unsigned int[]",
+	"[]u8":   "uint8_t[]",
+	"[]u16":  "uint16_t[]",
+	"[]u32":  "uint32_t[]",
+	"[]u64":  "uint64_t[]",
+	"[]flt":  "float[]",
+	"[]dbl":  "double[]",
+	"[]void": "void[]",
+	"[]bool": "bool[]",
 }
+
+var baseKeys = []string{
+	"str", "chr", "int", "i8", "i16", "i32", "i64",
+	"uint", "u8", "u16", "u32", "u64", "flt", "dbl", "void", "bool",
+}
+
 
 type KudaTranspiler struct {
 	idlv int
 	dwhl int
 	iss  int
+	isn  int
 	curStruct string
+	curEnum string
 }
 
 func KudaInit() KudaTranspiler {
@@ -67,44 +76,105 @@ func (s *KudaTranspiler) KudaGStr() string {
 	s.curStruct = ""
 	return tmp
 }
-
-func KudaCtype(kdtype string) string {
-	if c, ok := kdMtype[kdtype]; ok {
-		return c
-	}
-	return kdtype
+func (s *KudaTranspiler) KudaEnumIncr() { s.isn++ }
+func (s *KudaTranspiler) KudaEnumDecr() { if s.isn > 0 { s.isn-- }}
+func (s *KudaTranspiler) KudaIsEnum() bool { return s.isn > 0 }
+func (s *KudaTranspiler) KudaChgEnum(enm string) {s.curEnum = enm}
+func (s *KudaTranspiler) KudaGEnum() string {
+	var tmp string = s.curEnum
+	s.curEnum = ""
+	return  tmp
 }
 
-func Kudapln(line, indent string) string {
+var allKeys = []string{
+	"[]str", "[]chr", "[]int", "[]i8", "[]i16", "[]i32", "[]i64",
+	"[]uint", "[]u8", "[]u16", "[]u32", "[]u64", "[]flt", "[]dbl", "[]void", "[]bool",
+	"str", "chr", "int", "i8", "i16", "i32", "i64",
+	"uint", "u8", "u16", "u32", "u64", "flt", "dbl", "void", "bool",
+}
+
+func isTypeStart(s string, pos int) bool {
+	if pos == 0 {
+		return true
+	}
+	c := s[pos-1]
+	return !unicode.IsLetter(rune(c)) && !unicode.IsDigit(rune(c)) && c != '_'
+}
+
+func isTypeEnd(s string, pos int) bool {
+	if pos >= len(s) {
+		return true
+	}
+	c := s[pos]
+	return !unicode.IsLetter(rune(c)) && !unicode.IsDigit(rune(c)) && c != '_'
+}
+
+func KudaCtype(kdtype string) string {
+	if kdtype == "" {
+		return kdtype
+	}
+
+	var res []byte
+	pos := 0
+	n := len(kdtype)
+
+	for pos < n {
+		found := false
+
+		if isTypeStart(kdtype, pos) {
+			for _, k := range allKeys {
+				klen := len(k)
+				if pos+klen > n {
+					continue
+				}
+				if strings.Index(kdtype[pos:], k) == 0 && isTypeEnd(kdtype, pos+klen) {
+					res = append(res, kdMtype[k]...)
+					pos += klen
+					found = true
+					break
+				}
+			}
+		}
+
+		if !found {
+			res = append(res, kdtype[pos])
+			pos++
+		}
+	}
+
+	return string(res)
+}
+
+func Kudapln(line, indent string, isenum bool) string {
+	if isenum {
+		return fmt.Sprintf("%s%s,\n",indent, line)
+	}
 	return fmt.Sprintf("%s%s;\n", indent, line)
 }
 
 func Kudapvstrcd(line, indent string) string {
-	parts := strings.Fields(line)
+	var parts []string = strings.Fields(line)
 	if len(parts) < 2 {
 		return "Syntax Error"
 	}
-	vname := parts[1]
-	vtype := KudaCtype(parts[2])
+	var vname string = parts[1]
+	var vtype string = strings.Join(parts[2:], " ")
 	return fmt.Sprintf("%s%s %s;\n", indent, vtype, vname)
 }
 
 func Kudapvd(line, indent string) string {
-	parts := strings.SplitN(line, "=", 2)
+	var parts []string = strings.SplitN(line, "=", 2)
 	if len(parts) != 2 {
 		return Kudapvstrcd(line, indent)
 	}
-	decl := strings.Fields(strings.TrimSpace(parts[0]))
-	vval := strings.TrimSpace(parts[1])
+	var decl []string = strings.Fields(strings.TrimSpace(parts[0]))
+	var vval string = strings.TrimSpace(parts[1])
 
 	var vname, vtype string
 	switch len(decl) {
-	case 2: // var name = val → mặc định kiểu int
+	case 3:
 		vname = decl[1]
-		vtype = "int"
-	case 3: // var name type = val
-		vname = decl[1]
-		vtype = KudaCtype(decl[2])
+		vtype = strings.Join(decl[2:], " ")
 	default:
 		return "Syntax Error"
 	}
@@ -112,42 +182,74 @@ func Kudapvd(line, indent string) string {
 }
 
 func Fnpat(args string) string {
-	if args == "" {
+	trimmed := strings.TrimSpace(args)
+	if trimmed == "" {
 		return "void"
 	}
-	parts := strings.Split(args, ",")
+
+	groups := strings.Split(trimmed, ",")
 	var result []string
-	for _, part := range parts {
-		part = strings.TrimSpace(part)
-		if part == "" {
+	var pendingNames []string
+
+	for _, g := range groups {
+		group := strings.TrimSpace(g)
+		if group == "" {
 			continue
 		}
-		tokens := strings.Fields(part)
-		if len(tokens) >= 2 {
-			lastIdx := len(tokens) - 1
-			paramType := KudaCtype(tokens[lastIdx])
-			for _, name := range tokens[:lastIdx] {
-				result = append(result, fmt.Sprintf("%s %s", paramType, name))
+
+		tokens := strings.Fields(group)
+		n := len(tokens)
+		if n == 0 {
+			continue
+		}
+
+		// Chỉ có tên biến → gom chờ
+		if n == 1 {
+			pendingNames = append(pendingNames, tokens[0])
+			continue
+		}
+		varName := tokens[0]
+		typeOnly := strings.Join(tokens[1:], " ")
+
+		var qual, typ []string
+		for _, t := range strings.Fields(typeOnly) {
+			if t == "const" || t == "volatile" || t == "static" {
+				qual = append(qual, t)
+			} else {
+				typ = append(typ, t)
 			}
-		} else if len(tokens) == 1 {
-			result = append(result, tokens[0])
+		}
+		typeOnly = strings.Join(append(qual, typ...), " ")
+		for _, nm := range pendingNames {
+			result = append(result, typeOnly+" "+nm)
+		}
+		pendingNames = nil
+		result = append(result, typeOnly+" "+varName)
+	}
+	if len(pendingNames) > 0 && len(result) > 0 {
+		parts := strings.Fields(result[len(result)-1])
+		lastType := strings.Join(parts[:len(parts)-1], " ")
+		for _, nm := range pendingNames {
+			result = append(result, lastType+" "+nm)
 		}
 	}
 	return strings.Join(result, ", ")
 }
 
+
+
 func Fnprt(returns string) string {
-	rtype := strings.TrimSpace(returns)
+	var rtype string = strings.TrimSpace(returns)
 	if rtype == "" {
 		return "void"
 	}
-	return KudaCtype(rtype)
+	return rtype
 }
 
 func Kudapfn(line, indent string) string {
-	body := strings.TrimSpace(line[3:])
-	idxOpen := strings.Index(body, "(")
-	idxClose := strings.LastIndex(body, ")")
+	var body string = strings.TrimSpace(line[3:])
+	var idxOpen int = strings.Index(body, "(")
+	var idxClose int = strings.LastIndex(body, ")")
 	if idxOpen < 0 || idxClose < 0 || idxClose <= idxOpen {
 		return "Syntax Error"
 	}
@@ -159,22 +261,22 @@ func Kudapfn(line, indent string) string {
 }
 
 func Kudapif(line, indent string) string {
-	body := strings.TrimSpace(line[3:])
-	idxThen := strings.Index(body, " then")
+	var body string = strings.TrimSpace(line[3:])
+	var idxThen int = strings.Index(body, " then")
 	if idxThen < 0 {
 		return "Syntax Error"
 	}
-	condition := strings.TrimSpace(body[:idxThen])
+	var condition string = strings.TrimSpace(body[:idxThen])
 	return fmt.Sprintf("%sif (%s) {\n", indent, condition)
 }
 
 func Kudapelif(line, indent string) string {
-	body := strings.TrimSpace(line[7:])
-	idxThen := strings.Index(body, " then")
+	var body string = strings.TrimSpace(line[7:])
+	var idxThen int = strings.Index(body, " then")
 	if idxThen < 0 {
 		return "Syntax Error"
 	}
-	condition := strings.TrimSpace(body[:idxThen])
+	var condition string = strings.TrimSpace(body[:idxThen])
 	return fmt.Sprintf("%selse if (%s) {\n", indent, condition)
 }
 
@@ -183,53 +285,65 @@ func Kudapelse(line, indent string) string {
 }
 
 func Forpl(line, indent string) string {
-	body := strings.TrimSpace(line[4:])
-	parts := strings.SplitN(body, "=", 2)
+	var body string = strings.TrimSpace(line[4:])
+	var parts []string = strings.SplitN(body, "=", 2)
 	if len(parts) != 2 {
 		return "Syntax Error"
 	}
-	vname := strings.TrimSpace(parts[0])
-	right := strings.Fields(strings.TrimSpace(parts[1]))
+	var vname string = strings.TrimSpace(parts[0])
+	var right []string = strings.Fields(strings.TrimSpace(parts[1]))
 	if len(right) != 3 {
 		return "Syntax Error"
 	}
-	start, end, step := right[0], right[1], right[2]
+	var start string
+	var end string
+	var step string
+	start, end, step = right[0], right[1], right[2]
 	return fmt.Sprintf("%sfor(%s=%s;%s<%s;%s+=%s) {\n", indent, vname, start, vname, end, vname, step)
 }
 
 func Kudapfor(line, indent string) string {
-	body := strings.TrimSpace(line[4:])
-	parts := strings.SplitN(body, "=", 2)
+	var body string = strings.TrimSpace(line[4:])
+	var parts []string = strings.SplitN(body, "=", 2)
 	if len(parts) != 2 {
 		return "Syntax Error"
 	}
 
-	left := strings.Fields(strings.TrimSpace(parts[0]))
-	// Hỗ trợ cả dấu phẩy và dấu cách cho phần giá trị
-	rightRaw := strings.ReplaceAll(parts[1], ",", " ")
-	right := strings.Fields(strings.TrimSpace(rightRaw))
+	var left []string = strings.Fields(strings.TrimSpace(parts[0]))
+
+	var rightRaw string = strings.ReplaceAll(parts[1], ",", " ")
+	var right []string = strings.Fields(strings.TrimSpace(rightRaw))
 
 	if len(right) != 4 {
 		return "Syntax Error"
 	}
-	start, end, step := right[0], right[1], right[2]
+	var start string
+	var end string
+	var step string
+
+	start, end, step = right[0], right[1], right[2]
 
 	var vname, vtype string
 	if len(left) == 2 {
 		vname = left[0]
-		vtype = KudaCtype(left[1])
+		vtype = left[1]
 	} else if len(left) == 1 {
 		return Forpl(line, indent)
 	} else {
 		return "Syntax Error"
 	}
 
-	return fmt.Sprintf("%sfor(%s %s=%s;%s<%s;%s+=%s) {\n", indent, vtype, vname, start, vname, end, vname, step)
+	var cond string = "<"
+	if strings.HasPrefix(step, "-") {
+		cond = ">"
+	}
+
+	return fmt.Sprintf("%sfor(%s %s=%s;%s%s%s;%s+=%s) {\n", indent, vtype, vname, start, vname, cond, end, vname, step)
 }
 
 
 func Kudapwhl(line, indent string) string {
-	body := strings.TrimSpace(line[6:])
+	var body string = strings.TrimSpace(line[6:])
 	return fmt.Sprintf("%swhile (%s) {\n", indent, body)
 }
 
@@ -238,36 +352,64 @@ func Kudapdo(line, indent string) string {
 }
 
 func Kudapdwh(line, indent string) string {
-	body := strings.TrimSpace(line[6:])
+	var body string = strings.TrimSpace(line[6:])
 	return fmt.Sprintf("%s} while (%s);\n", indent, body)
 }
 
 func Kudapstrc(line, indent string) (string, string) {
-	body := strings.TrimSpace(line[7:])
+	var body string = strings.TrimSpace(line[7:])
 	if body == "" {
 		return "Syntax Error", ""
 	}
-	strcName := strings.TrimSpace(body)
+	var strcName string = strings.TrimSpace(body)
 	return fmt.Sprintf("%stypedef struct %s {\n", indent, strcName), strcName
 }
 
 func Kudapimp(line, indent string) string {
-	body := strings.TrimSpace(line[7:])
+	var body string = strings.TrimSpace(line[7:])
 	return fmt.Sprintf("#include %s\n", body)
+}
+
+func kudapenum(line, indent string) (string, string) {
+	var body string = strings.TrimSpace(line[5:])
+	var parts []string = strings.Fields(body)
+	if len(parts) != 1 {
+		return "Syntax Error", ""
+	}
+	var name string = parts[0]
+	return fmt.Sprintf("typedef enum %s {\n", name), name
+}
+
+func kudapswitch(line, indent string) string {
+	var body string = strings.TrimSpace(line[7:])
+	return fmt.Sprintf("%sswitch (%s) {\n", indent, body)
+}
+
+func kudapcase(line, indent string) string {
+	var body string = strings.TrimSpace(line[5:])
+	return fmt.Sprintf("%scase %s:\n", indent, body)
+}
+
+func kudapdefault(line, indent string) string {
+	var body string = strings.TrimSpace(line[:7])
+	if body == "default " {
+		return fmt.Sprintf("%sdefault:\n", indent)
+	} else {
+		return  fmt.Sprintf("%sdefault:\n", indent)
+	}
 }
 
 func Kudapend(line, indent string, iss bool, curStructName string) string {
 	if iss {
-		// Đóng struct ĐÚNG chuẩn: } TênStruct;
 		return fmt.Sprintf("%s} %s;\n", indent, curStructName)
 	}
 	return fmt.Sprintf("%s}\n", indent)
 }
 
 func KudaTranslate(kudaInput, inputFile string) (string, bool) {
-	lines := strings.Split(kudaInput, "\n")
-	kudaCtx := KudaInit()
-	canCompile := true
+	var lines []string = strings.Split(kudaInput, "\n")
+	var kudaCtx KudaTranspiler = KudaInit()
+	var canCompile bool = true
 
 	var kudaOutput strings.Builder
 	kudaOutput.WriteString(`#include <stddef.h>
@@ -275,6 +417,7 @@ func KudaTranslate(kudaInput, inputFile string) (string, bool) {
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
@@ -289,8 +432,10 @@ func KudaTranslate(kudaInput, inputFile string) (string, bool) {
 			continue
 		}
 
-		indent := kudaCtx.KudaIndent()
-		parts := strings.Fields(line)
+		line = KudaCtype(line)
+
+		var indent string = kudaCtx.KudaIndent()
+		var parts []string = strings.Fields(line)
 		if len(parts) == 0 {
 			continue
 		}
@@ -335,23 +480,54 @@ func KudaTranslate(kudaInput, inputFile string) (string, bool) {
 			kudaCtx.KudaIncr()
 			kudaCtx.KudaStrctIncr()
 			kudaCtx.KudaChgS(sn)
+		case "enum":
+			var en string
+			result, en = kudapenum(line, indent)
+			kudaCtx.KudaEnumIncr()
+			kudaCtx.KudaChgEnum(en)
 		case "import":
 			result = Kudapimp(line, indent)
+		case "switch":
+			result = kudapswitch(line, indent)
+		case "case":
+			result = kudapcase(line, indent)
+			kudaCtx.KudaIncr()
+		case "default":
+			result = kudapdefault(line, indent)
+			kudaCtx.KudaIncr()
+		case "break":
+			result = Kudapln(line, indent, false)
+			kudaCtx.KudaDecr()
+		case "continue":
+			result = Kudapln(line, indent, false)
+			kudaCtx.KudaDecr()
+		case "return":
+			result = Kudapln(line, indent, false)
+			kudaCtx.KudaDecr()
 		case "end":
 			kudaCtx.KudaDecr()
 			indent = kudaCtx.KudaIndent()
-			var strcnm string = kudaCtx.KudaGStr()
-			result = Kudapend(line, indent, kudaCtx.IsStruct(), strcnm)
+			var strcnm string
+			if kudaCtx.IsStruct() {
+				strcnm = kudaCtx.KudaGStr()
+			} else if kudaCtx.KudaIsEnum() {
+				strcnm = kudaCtx.KudaGEnum()
+			}
+			result = Kudapend(line, indent, kudaCtx.IsStruct() || kudaCtx.KudaIsEnum(), strcnm)
 			if kudaCtx.IsStruct() {
 				kudaCtx.KudaStrctDecr()
+			} else if kudaCtx.KudaIsEnum() {
+				kudaCtx.KudaEnumDecr()
 			}
+		case "//":
+			continue
 		default:
-			result = Kudapln(line, indent)
+			result = Kudapln(line, indent, kudaCtx.KudaIsEnum())
 		}
 
 		if result == "Syntax Error" {
 			canCompile = false
-			fmt.Printf("[Lỗi cú pháp] Dòng %d: %s\n", lineIdx+1, rawLine)
+			fmt.Printf("[Kuda-Transpiler] Syntax Error Line %d: %s\n", lineIdx+1, rawLine)
 		}
 
 		if canCompile {
