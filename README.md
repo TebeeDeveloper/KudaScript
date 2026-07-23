@@ -2,6 +2,10 @@
 -   Cáo ống tre - Kuda-gitsune
 -   Native C
 
+## Spirit
+-    Fast as C
+-    Simple as Script
+
 ## Examples
 ```rust
 fn main() int
@@ -13,6 +17,12 @@ end
 -   Current version: 0x103.
 -   License: __GNU GPL v3__.
 -   Core language: Pure standard C.
+
+## Why KudaScript
+-    Only upgrade C, no garbage
+-    Determinism syntax, no abstract
+-    Absolute secure your source
+-    Fast as C
 
 ## Intro
 KudaScript is a new programming language built with clear goals:
